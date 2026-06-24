@@ -1,0 +1,27 @@
+[mysqld]
+# ─────────────────────────────────────────
+# Konfigurasi MariaDB untuk GLPI
+# ─────────────────────────────────────────
+
+# Karakter set
+character-set-server  = utf8mb4
+collation-server      = utf8mb4_unicode_ci
+
+# SQL Mode - kompatibel dengan GLPI
+sql_mode              = NO_ENGINE_SUBSTITUTION
+innodb_strict_mode    = 0
+
+# Performa
+innodb_buffer_pool_size = 256M
+innodb_log_file_size    = 64M
+max_allowed_packet      = 64M
+query_cache_size        = 0
+query_cache_type        = 0
+
+# Koneksi
+max_connections         = 100
+wait_timeout            = 600
+interactive_timeout     = 600
+
+[client]
+default-character-set = utf8mb4
