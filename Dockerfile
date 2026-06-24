@@ -28,7 +28,6 @@ RUN docker-php-ext-install intl
 RUN docker-php-ext-configure ldap --with-libdir=lib/x86_64-linux-gnu
 RUN docker-php-ext-install ldap
 
-RUN docker-php-ext-install mysqli pdo_mysql mbstring zip bz2 exif
 
 # PHP settings
 RUN { \
