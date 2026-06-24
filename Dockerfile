@@ -45,7 +45,7 @@ RUN docker-php-ext-configure gd --with-freetype --with-jpeg \
 
 
 # ── 2. Download dan ekstrak GLPI ─────────────────────
-WORKDIR /var/www/html
+WORKDIR /var/www/html/apps
 COPY apps/ /var/www/html/apps/
 
 RUN curl -sS https://getcomposer.org/installer | php
@@ -70,7 +70,7 @@ RUN echo '<VirtualHost *:80>\n\
 RUN chown -R www-data:www-data /var/www/html/apps \
     && chmod -R 755 /var/www/html/apps
 
-RUN composer install --no-dev
+    RUN composer install --no-dev --optimize-autoloader
 
 # ── 8. Expose port & jalankan Apache di foreground ────
 EXPOSE 80
