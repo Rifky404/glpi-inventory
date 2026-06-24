@@ -33,7 +33,8 @@ services:
   apache2:
     image: php:7.4-apache
     container_name: glpi_app
-    restart: always
+    restart: always,
+    dockerfile: Dockerfile
     environment:
       TIMEZONE: ${TIMEZONE}
     volumes:

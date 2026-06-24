@@ -19,3 +19,13 @@ RUN pip install --no-cache-dir -r requirements.txt
 # Copy project
 COPY apps/ /home/$USER/glpi-inventory
 
+RUN chown -R www-data:www-data var/www/html/glpi &&\
+    chmod -R 755 var/www/html/glpi\
+    chmod -R 755 /var/www/html/glpi && \
+    chmod -R 777 /var/www/html/glpi/files && \
+    chmod -R 777 /var/www/html/glpi/config
+
+RUN a2enmod rewrite && \
+    a2enmod headers && \
+    service apache2 restart
+
