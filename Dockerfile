@@ -99,7 +99,8 @@ RUN php -d memory_limit=-1 /usr/local/bin/composer install \
         --optimize-autoloader \
         --no-interaction \
         --no-scripts \
-        --no-progress
+        --no-progress \
+        --verbose
 
 # ─────────────────────────────────────────────────────────────────────────────
 # 7. Apache VirtualHost + mod_rewrite
