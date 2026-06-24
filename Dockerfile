@@ -63,10 +63,7 @@ RUN echo '<VirtualHost *:80>\n\
 
 # ── 7. Set permission folder GLPI ─────────────────────
 RUN chown -R www-data:www-data /var/www/html/apps \
-    && chmod -R 755 /var/www/html/apps \
-    && chmod -R 777 /var/www/html/apps/files \
-    && chmod -R 777 /var/www/html/apps/config \
-    && chmod -R 777 /var/www/html/apps/marketplace
+    && chmod -R 755 /var/www/html/apps
 
 # ── 8. Expose port & jalankan Apache di foreground ────
 EXPOSE 80
