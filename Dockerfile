@@ -23,6 +23,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     libonig-dev \
     unzip \
     curl \
+    git \
     && rm -rf /var/lib/apt/lists/*
 
 # ── 2. Install PHP extensions ─────────────────────────
@@ -47,6 +48,10 @@ RUN docker-php-ext-configure gd --with-freetype --with-jpeg \
 WORKDIR /var/www/html
 COPY apps/ /var/www/html/apps/
 
+RUN curl -sS https://getcomposer.org/installer | php
+RUN mv composer.phar /usr/local/bin/composer
+
+
 # ── 6. Konfigurasi Apache VirtualHost ─────────────────
 RUN echo '<VirtualHost *:80>\n\
     DocumentRoot /var/www/html/apps\n\
@@ -64,6 +69,8 @@ RUN echo '<VirtualHost *:80>\n\
 # ── 7. Set permission folder GLPI ─────────────────────
 RUN chown -R www-data:www-data /var/www/html/apps \
     && chmod -R 755 /var/www/html/apps
+
+RUN composer install --no-dev
 
 # ── 8. Expose port & jalankan Apache di foreground ────
 EXPOSE 80
