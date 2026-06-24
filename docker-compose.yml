@@ -29,8 +29,9 @@ services:
   # ─────────────────────────────────────────
   # GLPI Application
   # ─────────────────────────────────────────
-  glpi:
-    image: diouxx/glpi
+
+  apache2:
+    image: php:7.4-apache
     container_name: glpi_app
     restart: always
     environment:
