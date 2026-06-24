@@ -2,25 +2,46 @@
 # GLPI Dockerfile
 # Base: php:8.1-apache (sudah include Apache + PHP)
 # ─────────────────────────────────────────────────────
-FROM php:7.2-apache
-
-# Versi GLPI yang akan diinstall
-ARG GLPI_VERSION=9.5.13
-
-# ── 1. Install dependency sistem ──────────────────────
-RUN apt-get update && apt-get install -y \
-    apache2 \
-    libapache2-mod-php \
-    php-mysql \
-    php-curl \
-    php-gd \
-    php-intl \
-    php-mbstring \
-    php-xml \
-    php-zip \
+FROM php:8.1-apache
+ 
+ARG GLPI_VERSION=10.0.18
+ 
+# ── 1. Install LIBRARY SISTEM saja (bukan Apache/PHP) ─
+#    php:8.1-apache sudah punya Apache & PHP.
+#    apt hanya untuk .so / dev headers yang dibutuhkan
+#    docker-php-ext-install di langkah berikutnya.
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    libpng-dev \
+    libjpeg-dev \
+    libfreetype6-dev \
+    libzip-dev \
+    libbz2-dev \
+    libldap2-dev \
+    libicu-dev \
+    libxml2-dev \
+    libcurl4-openssl-dev \
+    libonig-dev \
     unzip \
-    wget \
+    curl \
     && rm -rf /var/lib/apt/lists/*
+
+# ── 2. Install PHP extensions ─────────────────────────
+#    Cara yang benar di Docker PHP image
+RUN docker-php-ext-configure gd --with-freetype --with-jpeg \
+    && docker-php-ext-configure ldap \
+    && docker-php-ext-install -j$(nproc) \
+        gd \
+        intl \
+        ldap \
+        mysqli \
+        pdo_mysql \
+        mbstring \
+        zip \
+        bz2 \
+        curl \
+        opcache \
+        exif
+
 
 # ── 2. Download dan ekstrak GLPI ─────────────────────
 WORKDIR /var/www/html
