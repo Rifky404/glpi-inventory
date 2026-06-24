@@ -56,6 +56,7 @@ log "Menarik image Docker..."
 docker compose pull
 
 log "Menjalankan container..."
+docker compose build --no-cache
 docker compose up -d --build
 
 # ── 4. Tunggu MariaDB siap ─────────────────
