@@ -9,62 +9,24 @@ ARG GLPI_VERSION=9.5.13
 
 # ── 1. Install dependency sistem ──────────────────────
 RUN apt-get update && apt-get install -y \
-    libpng-dev \
-    libjpeg-dev \
-    libfreetype6-dev \
-    libzip-dev \
-    libbz2-dev \
-    libldap2-dev \
-    libicu-dev \
-    libxml2-dev \
-    libcurl4-openssl-dev \
-    libonig-dev \
+    apache2 \
+    libapache2-mod-php \
+    php-mysql \
+    php-curl \
+    php-gd \
+    php-intl \
+    php-mbstring \
+    php-xml \
+    php-zip \
     unzip \
-    curl \
+    wget \
     && rm -rf /var/lib/apt/lists/*
 
-# ── 2. Install PHP extensions ─────────────────────────
-# (Cara yang benar di Docker PHP image: docker-php-ext-install)
-RUN docker-php-ext-configure gd --with-freetype --with-jpeg \
-    && docker-php-ext-configure ldap \
-    && docker-php-ext-install -j$(nproc) \
-        gd \
-        intl \
-        ldap \
-        mysqli \
-        pdo_mysql \
-        dom \
-        mbstring \
-        zip \
-        bz2 \
-        curl \
-        opcache \
-        xml \
-        xmlrpc \
-        exif
+# ── 2. Download dan ekstrak GLPI ─────────────────────
+WORKDIR /var/www/html
+COPY apps/ /var/www/html/apps/
 
-# Install APCu (via PECL karena tidak ada di ext-install)
-RUN pecl install apcu && docker-php-ext-enable apcu
 
-# ── 3. Konfigurasi PHP ────────────────────────────────
-RUN { \
-    echo 'memory_limit = 256M'; \
-    echo 'upload_max_filesize = 20M'; \
-    echo 'post_max_size = 20M'; \
-    echo 'max_execution_time = 300'; \
-    echo 'date.timezone = Asia/Jakarta'; \
-    echo 'session.cookie_httponly = On'; \
-} > /usr/local/etc/php/conf.d/glpi.ini
-
-# ── 4. Aktifkan modul Apache ──────────────────────────
-RUN a2enmod rewrite headers
-
-# ── 5. Download & install GLPI ────────────────────────
-RUN curl -L \
-    "https://github.com/glpi-project/glpi/releases/download/${GLPI_VERSION}/glpi-${GLPI_VERSION}.tgz" \
-    -o /tmp/glpi.tgz \
-    && tar -xzf /tmp/glpi.tgz -C /var/www/html/ \
-    && rm /tmp/glpi.tgz
 
 # ── 6. Konfigurasi Apache VirtualHost ─────────────────
 RUN echo '<VirtualHost *:80>\n\
